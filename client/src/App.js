@@ -113,45 +113,40 @@ const App = () => {
   const onClickP1 = () => {
     setP1(p1Score + 1);
     const point = p1Score + 1;
-    let displayScore;
     let _result = 3;
     if (p1Score <= 1) {
       setDisplayP1(p1DisplayScore + 15);
-      displayScore = p1DisplayScore + 15;
     } else if (p1Score >= 2 && p1Score < 3) {
       setDisplayP1(p1DisplayScore + 10);
-      displayScore = p1DisplayScore + 10;
     } else if (p1Score === 3) {
       setDisplayP1(1);
     } else {
       setDisplayP1(p1DisplayScore + 1);
-      displayScore = p1DisplayScore + 1;
     }
-    console.log(`${point} ||${p2Score} `);
     if (point > 3 && point - p2Score >= 2) {
       setResult(1);
       _result = 1;
     }
 
-    updateScore(point, p2Score, displayScore, p2DisplayScore, _result);
+    updateScore(point, p2Score, p1DisplayScore, p2DisplayScore, _result);
+    console.log(
+      `${point} ||${p2Score}||${p1DisplayScore}|| ${p2DisplayScore} || ${_result}  `
+    );
   };
 
-  const onClickP2 = () => {
+  const onClickP2 = async () => {
     setP2(p2Score + 1);
     const point = p2Score + 1;
-    let displayScore;
     let _result = 3;
+    let displayScore;
     if (p2Score <= 1) {
       setDisplayP2(p2DisplayScore + 15);
-      displayScore = p2DisplayScore + 15;
     } else if (p2Score >= 2 && p2Score < 3) {
       setDisplayP2(p2DisplayScore + 10);
-      displayScore = p2DisplayScore + 10;
     } else if (p2Score === 3) {
       setDisplayP2(1);
     } else {
       setDisplayP2(p2DisplayScore + 1);
-      displayScore = p2DisplayScore + 1;
     }
 
     if (point > 3 && point - 1 - p1Score >= 2) {
@@ -159,7 +154,10 @@ const App = () => {
       _result = 2;
     }
 
-    updateScore(p1Score, point, p1DisplayScore, displayScore, _result);
+    updateScore(p1Score, point, p1DisplayScore, p2DisplayScore, _result);
+    console.log(
+      `${point} ||${p2Score}||${p1DisplayScore}|| ${p2DisplayScore} || ${_result}  `
+    );
   };
 
   return (
