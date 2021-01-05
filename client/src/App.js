@@ -6,6 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
+import Player1CustomButton from "./button/Player1CustomButton";
+import Player2CustomButton from "./button/Player2CustomButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,16 +38,18 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
   const classes = useStyles();
-  const [p1Score, setP1] = useState(0);
-  const [p2Score, setP2] = useState(0);
-  const [p1DisplayScore, setDisplayP1] = useState(0);
-  const [p2DisplayScore, setDisplayP2] = useState(0);
-  const [result, setResult] = useState(3);
-  const [loading, setLoading] = useState(false);
+  const [p1Score, setP1] = useState(0); // Player 1 score
+  const [p2Score, setP2] = useState(0); // Player 2 score
+  const [p1DisplayScore, setDisplayP1] = useState(0); // Player 1 display score
+  const [p2DisplayScore, setDisplayP2] = useState(0); // Player 2 display score
+  const [result, setResult] = useState(3); // Game result
+  const [loading, setLoading] = useState(false); // Loading flag
 
   useEffect(() => {
+    // Set loading before get request so app won't render when data is not ready
     setLoading(true);
     try {
+      // Making a get request to get game data form database
       async function fetchData() {
         const value = await axios.get("/api/game/5ff395ad653be0020cfdc998");
         const data = value.data.data;
@@ -73,7 +77,7 @@ const App = () => {
     try {
       const result = await axios.put("api/game/reset/5ff395ad653be0020cfdc998");
 
-      console.log(result);
+      console.log(result.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -93,6 +97,7 @@ const App = () => {
     result
   ) => {
     try {
+      // Updateing game data buy making a put request
       const value = await axios.put(
         "/api/game/5ff395ad653be0020cfdc998",
         {
@@ -108,56 +113,6 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const onClickP1 = () => {
-    setP1(p1Score + 1);
-    const point = p1Score + 1;
-    let _result = 3;
-    if (p1Score <= 1) {
-      setDisplayP1(p1DisplayScore + 15);
-    } else if (p1Score >= 2 && p1Score < 3) {
-      setDisplayP1(p1DisplayScore + 10);
-    } else if (p1Score === 3) {
-      setDisplayP1(1);
-    } else {
-      setDisplayP1(p1DisplayScore + 1);
-    }
-    if (point > 3 && point - p2Score >= 2) {
-      setResult(1);
-      _result = 1;
-    }
-
-    updateScore(point, p2Score, p1DisplayScore, p2DisplayScore, _result);
-    console.log(
-      `${point} ||${p2Score}||${p1DisplayScore}|| ${p2DisplayScore} || ${_result}  `
-    );
-  };
-
-  const onClickP2 = async () => {
-    setP2(p2Score + 1);
-    const point = p2Score + 1;
-    let _result = 3;
-    let displayScore;
-    if (p2Score <= 1) {
-      setDisplayP2(p2DisplayScore + 15);
-    } else if (p2Score >= 2 && p2Score < 3) {
-      setDisplayP2(p2DisplayScore + 10);
-    } else if (p2Score === 3) {
-      setDisplayP2(1);
-    } else {
-      setDisplayP2(p2DisplayScore + 1);
-    }
-
-    if (point > 3 && point - 1 - p1Score >= 2) {
-      setResult(2);
-      _result = 2;
-    }
-
-    updateScore(p1Score, point, p1DisplayScore, p2DisplayScore, _result);
-    console.log(
-      `${point} ||${p2Score}||${p1DisplayScore}|| ${p2DisplayScore} || ${_result}  `
-    );
   };
 
   return (
@@ -189,15 +144,20 @@ const App = () => {
                   <h3 style={{ textAlign: "center" }}>Player 1</h3>
                   <div style={{ textAlign: "center", marginTop: "30px" }}>
                     {" "}
-                    <Button
-                      variant="contained"
-                      size="large"
-                      color="primary"
-                      onClick={() => onClickP1()}
-                      disabled={result === 3 ? false : true}
-                    >
-                      Player 1 scored
-                    </Button>
+                    <Player1CustomButton
+                      result={result}
+                      setResult={setResult}
+                      p1Score={p1Score}
+                      setP1={setP1}
+                      p2Score={p2Score}
+                      setP2={setP2}
+                      p1DisplayScore={p1DisplayScore}
+                      setDisplayP1={setDisplayP1}
+                      p2DisplayScore={p2DisplayScore}
+                      setDisplayP2={setDisplayP2}
+                      resetGame={resetGame}
+                      updateScore={updateScore}
+                    />
                   </div>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -207,15 +167,20 @@ const App = () => {
                   <h3 style={{ textAlign: "center" }}>Player 2</h3>
                   <div style={{ textAlign: "center", marginTop: "30px" }}>
                     {" "}
-                    <Button
-                      variant="contained"
-                      size="large"
-                      color="primary"
-                      onClick={() => onClickP2()}
-                      disabled={result === 3 ? false : true}
-                    >
-                      Player 2 scored
-                    </Button>
+                    <Player2CustomButton
+                      result={result}
+                      setResult={setResult}
+                      p1Score={p1Score}
+                      setP1={setP1}
+                      p2Score={p2Score}
+                      setP2={setP2}
+                      p1DisplayScore={p1DisplayScore}
+                      setDisplayP1={setDisplayP1}
+                      p2DisplayScore={p2DisplayScore}
+                      setDisplayP2={setDisplayP2}
+                      resetGame={resetGame}
+                      updateScore={updateScore}
+                    />
                   </div>
                 </Grid>
               </Grid>

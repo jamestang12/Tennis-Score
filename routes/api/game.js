@@ -99,7 +99,7 @@ router.put(
           { new: true }
         );
 
-        return res.status(200).send(data);
+        return res.status(200).send({ data: data });
       }
     } catch (error) {
       console.log(error);
